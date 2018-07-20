@@ -1,0 +1,26 @@
+version: '3'
+services:
+  app:
+    container_name: "node-blog"
+    image: node:8
+    environment:
+      - NODE_ENV=development
+      - FOO=bar
+    ports:
+    - "8000:8000"
+    volumes:
+    - .:/usr/src/blog:rw
+    - ./blog:/usr/src/blog
+    links:
+    - mongodb
+  mongodb:
+    image: mongo:latest
+    container_name: "mongo-blog"
+    environment:
+      - MONGO_DATA_DIR=/data/configdb
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./blog/db:/data/configdb
+    ports:
+    - "27017:27017"
+    conmand: mongod --smallfiles --logpath=/dev/null # --quiet
