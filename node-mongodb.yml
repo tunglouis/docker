@@ -1,18 +1,15 @@
-version: '3'
+version: '2'
 services:
   app:
-    container_name: "node-blog"
-    image: node:8
-    environment:
-      - NODE_ENV=development
-      - FOO=bar
+    build: .
     ports:
     - "8000:8000"
+    working_dir: /usr/src/blog
     volumes:
-    - .:/usr/src/blog:rw
     - ./blog:/usr/src/blog
     links:
     - mongodb
+    tty: true
   mongodb:
     image: mongo:latest
     container_name: "mongo-blog"
@@ -23,4 +20,4 @@ services:
       - ./blog/db:/data/configdb
     ports:
     - "27017:27017"
-    conmand: mongod --smallfiles --logpath=/dev/null # --quiet
+    restart: always
