@@ -1,0 +1,39 @@
+version: '2'
+services:
+
+  # The Application
+  app:
+    build:
+      context: ./
+      dockerfile: app.dockerfile
+    working_dir: /var/www
+    volumes:
+      - /home/savvycom/public_html/RPP/RPP_Backend:/var/www
+    environment:
+      - "DB_PORT=3306"
+      - "DB_HOST=database"
+
+  # The Web Server
+  web:
+    build:
+      context: ./
+      dockerfile: web.dockerfile
+    working_dir: /var/www
+    volumes_from:
+      - app
+    ports:
+      - 8081:80
+
+  # The Database
+  database:
+    image: mysql:5.6
+    volumes:
+      - /home/savvycom/public_html/RPP/dbdata:/var/lib/mysql
+    environment:
+      - "MYSQL_ROOT_PASSWORD=root"
+      - "MYSQL_DATABASE=rpp"
+    ports:
+        - "33062:3306"
+
+volumes:
+  dbdata:
